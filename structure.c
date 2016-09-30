@@ -3,7 +3,7 @@
 #include<string.h>
 
 #define MAXWORD 100
-#define NKEYS (sizeof keytab / sizeof(struct key)
+#define NKEYS (sizeof keytab / sizeof(struct key))
 #define BUFSIZE 100
 
 char buf[BUFSIZE]; /** buffer for ungetch **/
@@ -12,14 +12,14 @@ int bufp = 0;      /** next free position in buf **/
 struct key{
 	char *word;
 	int count;
-}keytab[2] = {
+}keytab[] = {
 	{"alma",0},
-	{"auto",0}
-	//{"avion",0},
-	//{"botella",0},
-	//{"butaramanga",0},
-	//{"gol",0},
-	//{"peru",0}
+	{"auto",0},
+	{"avion",0},
+	{"botella",0},
+	{"butaramanga",0},
+	{"gol",0},
+	{"peru",0}
 			}; 
 
 int getch(void)  /**  get a (possibly pushed back) character **/
@@ -41,15 +41,15 @@ void ungetch(int c) /** pus character back on input **/
 
 int getword(char *word,int lim){ /** getword : get next word or character from input   **/
 	
-	int c, getch(void);
-	void ungetch(int);
+	int c;
 	char *w = word;
 	
-	while( isspace( c=getch() ) )
+	while( isspace( c=getch() ) ) /** skips the blanks **/
 		;
 	
 	if(c !=EOF){
-			*w++ = c;
+			*w = c;
+			w++;
 	}
 	
 	if(!isalpha(c)){
@@ -57,7 +57,7 @@ int getword(char *word,int lim){ /** getword : get next word or character from i
 		return c;	
 	}
 	
-	for(; --lim; w++){
+	for(; --lim>0; w++){ //OJO
 	
 		if(!isalnum(*w =getch())){
 			ungetch(*w);
@@ -65,6 +65,7 @@ int getword(char *word,int lim){ /** getword : get next word or character from i
 		}
 	}
 	*w = '\0';
+	
 	return word[0];
 	//return 4;
 }
@@ -95,10 +96,11 @@ int my_binsearch(char *word, struct key tab[], int n){ /** PROTOTIPO :  int bins
 /**count C keywords */
 int main(){
 
-	int n,i;
+	int n = my_binsearch("papa", keytab, NKEYS);
 	char word[MAXWORD];
-	
-	while( getword(word,MAXWORD) !=EOF ){  /** each call to "getword" finds a word, wich is copied into the array named as its first argument **/
+	 
+	 
+	while( getword(word,MAXWORD) !=EOF ){  /** each call to "getword" finds a word, wich is copied into the array named as its first argument  **/
 	
 		if( isalpha(word[0]) ){   /** int isalpha(int c) : es una macro que comprube si el entero "c" pertenece al rango de letras (A o Z) or (a o z) **/
 		
@@ -107,13 +109,11 @@ int main(){
 				 keytab[n].count++;
 			}
 		}
-		
-	}
-	
+	} 
 	 
-	for(i=0; i < NKEYS; i++){
-		if( keytab[i].count > 0 ){
-			printf("%4d %s \n", keytab[i].count, keytab[i].word);
+	for(n=0; n < NKEYS; n++){
+		if( keytab[n].count > 0 ){
+			printf("%4d %s \n", keytab[n].count, keytab[n].word);
 		}
 	}
 	
